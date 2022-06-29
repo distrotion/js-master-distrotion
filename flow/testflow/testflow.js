@@ -67,7 +67,7 @@ router.post('/logindb', async (req, res) => {
     output.Status = 'nok';
   }
   console.log(output);
-  res.json(output);
+  return res.json(output);
 });
 
 
@@ -78,7 +78,7 @@ router.get('/mongotest', async (req, res) => {
   // var output = await mongodb.find("test","doc01",{"data":2});
   var upd = await mongodb.update("test", "doc01", { "data": 2 }, { $set: { b: 777 } });
   var output = await mongodb.find("test", "doc01", { "data": 2 });
-  res.json(output)
+  return res.json(output)
 })
 
 router.get('/testreq', async (req, res) => {
@@ -86,7 +86,7 @@ router.get('/testreq', async (req, res) => {
   data = { "test": "haha" }
   var output = await httpreq.post('http://127.0.0.1:7510/testpost', data)
   // var output = await httpreq.get('http://127.0.0.1:7510/testpost')
-  res.send(output)
+  return res.send(output)
 })
 
 
