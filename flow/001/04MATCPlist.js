@@ -64,7 +64,7 @@ router.post('/GET_MATCPLIST', async (req, res) => {
   console.log(input);
 
 
-  let find2 = await mongodb.find("SAPdata", "GASGW", {});
+  let find2 = await mongodb.find("ERP_data", "ERP_AUTO", {});
   if (find2.length > 0) {
     output = find2[0][`data`];
   }
