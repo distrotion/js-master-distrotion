@@ -4,7 +4,7 @@ var mongodb = require('../../function/mongodb');
 var mssql = require('../../function/mssql');
 var request = require('request');
 
-let masterDB = "master_FN";
+let masterDB = "master_IC";
 let PATTERN = "PATTERN";
 //
 let GRAPH_TABLE = "GRAPH_TABLE";
@@ -25,13 +25,10 @@ let FREQUENCY = "FREQUENCY";
 let PATTERN_01 = "PATTERN_01";
 
 
-router.get('/FINALMASTER', async (req, res) => {
-  return res.json("READY");
-});
 
-router.post('/INSPECTION_FINAL_GET_STEP1', async (req, res) => {
+router.post('/INSPECTION_INCOMING_GET_STEP1', async (req, res) => {
   //-------------------------------------
-  console.log("--INSPECTION_FINAL_GET_STEP1--");
+  console.log("--INSPECTION_INCOMING_GET_STEP1--");
   input = req.body;
   output2 = [];
   //-------------------------------------
@@ -42,21 +39,21 @@ router.post('/INSPECTION_FINAL_GET_STEP1', async (req, res) => {
       output2.push({ "ITEMs": find2[i]['ITEMs'], "RESULTFORMAT": find2[i]['RESULTFORMAT'], "TYPE": find2[i]['TYPE'], "GRAPHTYPE": find2[i]['GRAPHTYPE'], "INTERSECTION": find2[i]['INTERSECTION'], "masterID": find2[i]['masterID'] })
     }
   }
-  // console.log("------------");
-  // console.log(find2);
-  // console.log("------------");
+  console.log("------------");
+  console.log(find2);
+  console.log("------------");
 
 
   return res.json({ "ITEMs": output2 });
 });
 
-router.get('/FINALMASTER', async (req, res) => {
+router.get('/INCOMINGMASTER', async (req, res) => {
   return res.json("READY");
 });
 
-router.post('/INSPECTION_FINAL_GET_STEP2', async (req, res) => {
+router.post('/INSPECTION_INCOMING_GET_STEP2', async (req, res) => {
   //-------------------------------------
-  console.log("--INSPECTION_FINAL_GET_STEP2--");
+  console.log("--INSPECTION_INCOMING_GET_STEP2--");
   input = req.body;
   let RESULTFORMATdata = "";
   let TYPEdata = "";
@@ -151,9 +148,9 @@ router.post('/INSPECTION_FINAL_GET_STEP2', async (req, res) => {
 
 });
 
-router.post('/GET_DOCUMENT', async (req, res) => {
+router.post('/GET_INCOMING_DOCUMENT', async (req, res) => {
   //-------------------------------------
-  console.log("--GET_DOCUMENT--");
+  console.log("--GET_INCOMING_DOCUMENT--");
   input = req.body;
   output = { "DOCUMENT": "" }
   //-------------------------------------
@@ -169,9 +166,9 @@ router.post('/GET_DOCUMENT', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/GET_CALCULATE', async (req, res) => {
+router.post('/GET_INCOMING_CALCULATE', async (req, res) => {
   //-------------------------------------
-  console.log("--GET_CALCULATE--");
+  console.log("--GET_INCOMING_CALCULATE--");
   input = req.body;
   output = {}
   //-------------------------------------
@@ -188,46 +185,43 @@ router.post('/GET_CALCULATE', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/GET_MATCP_DATA', async (req, res) => {
-  //-------------------------------------
-  console.log("--GET_MATCP_DATA--");
-  input = req.body;
-  output = []
-  //-------------------------------------
-  console.log(input);
+// router.post('/GET_MATCP_DATA', async (req, res) => {
+//   //-------------------------------------
+//   console.log("--GET_MATCP_DATA--");
+//   input = req.body;
+//   output = []
+//   //-------------------------------------
+//   console.log(input);
 
-  let findTYPE = await mongodb.find(masterDB, TYPE, {});
-  let findITEMs = await mongodb.find(masterDB, ITEMs, {});
-  let findCALCULATE = await mongodb.find(masterDB, CALCULATE, {});
-  let findMACHINE = await mongodb.find(masterDB, MACHINE, {});
-  let findUNIT = await mongodb.find(masterDB, UNIT, {});
-  let findSPECIFICATION = await mongodb.find(masterDB, SPECIFICATION, {});
-
-
-  if (input['MATCP'] != undefined) {
-    let find2 = await mongodb.find(PATTERN, PATTERN_01, { "CP": `${input['MATCP']}` });
-    // console.log(find2);
-    if(find2.length>0){
-      output = find2;
-    }else{
-      output = [{
-        "CP":input['MATCP'],
-      }]
-    }
-   
-  }
-  output[0][`findTYPE`] = findTYPE;
-  output[0][`findITEMs`] = findITEMs;
-  output[0][`findCALCULATE`] = findCALCULATE;
-  output[0][`findMACHINE`] = findMACHINE;
-  output[0][`findUNIT`] = findUNIT;
-  output[0][`findSPECIFICATION`] = findSPECIFICATION;
-
-  return res.json(output);
-});
+//   let findTYPE = await mongodb.find(masterDB, TYPE, {});
+//   let findITEMs = await mongodb.find(masterDB, ITEMs, {});
+//   let findCALCULATE = await mongodb.find(masterDB, CALCULATE, {});
+//   let findMACHINE = await mongodb.find(masterDB, MACHINE, {});
+//   let findUNIT = await mongodb.find(masterDB, UNIT, {});
+//   let findSPECIFICATION = await mongodb.find(masterDB, SPECIFICATION, {});
 
 
+//   if (input['MATCP'] != undefined) {
+//     let find2 = await mongodb.find(PATTERN, PATTERN_01, { "CP": `${input['MATCP']}` });
+//     // console.log(find2);
+//     if (find2.length > 0) {
+//       output = find2;
+//     } else {
+//       output = [{
+//         "CP": input['MATCP'],
+//       }]
+//     }
 
+//   }
+//   output[0][`findTYPE`] = findTYPE;
+//   output[0][`findITEMs`] = findITEMs;
+//   output[0][`findCALCULATE`] = findCALCULATE;
+//   output[0][`findMACHINE`] = findMACHINE;
+//   output[0][`findUNIT`] = findUNIT;
+//   output[0][`findSPECIFICATION`] = findSPECIFICATION;
+
+//   return res.json(output);
+// });
 
 router.post('/GET_MATCP_DATA', async (req, res) => {
   //-------------------------------------
@@ -258,7 +252,7 @@ router.post('/GET_MATCP_SETDATA', async (req, res) => {
 
       out = input.CPorder;
 
-      input[`FINAL`] = [{
+      input[`INCOMING`] = [{
         'SEQ': 1,
         'TYPE': input.MASTERdatalist.TYPE,
         'ITEMs': input.editedItem_FN.ITEMs,
@@ -292,9 +286,9 @@ router.post('/GET_MATCP_SETDATA', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/INSPECTION_FINAL_GETSPEC', async (req, res) => {
+router.post('/INSPECTION_INCOMING_GETSPEC', async (req, res) => {
   //-------------------------------------
-  console.log("--INSPECTION_FINAL_GETSPEC--");
+  console.log("--INSPECTION_INCOMING_GETSPEC--");
   let input = req.body;
   let output = []
   //-------------------------------------
@@ -307,15 +301,15 @@ router.post('/INSPECTION_FINAL_GETSPEC', async (req, res) => {
   return res.json(output);
 });
 
-
-router.post('/FINAL_SAVE', async (req, res) => {
+router.post('/INCOMING_SAVE', async (req, res) => {
   //-------------------------------------
-  console.log("--FINAL_SAVE--");
+  console.log("--INCOMING_SAVE--");
   let input = req.body;
   let output = {}
   //-------------------------------------
   console.log(input);
-  if (input['CPorder'] != null && input['MASTERdatalist'] != null && input['editedItem_FN'] != null) {
+  if (input['CPorder'] != null && input['MASTERdatalist'] != null && input['editedItem_IC'] != null) {
+    console.log("--************--");
     let findPATTERN = await mongodb.find(PATTERN, PATTERN_01, { "CP": input[`CPorder`]['CP'] });
     if (findPATTERN.length == 0) {
       let out = input['CPorder'];
@@ -344,19 +338,19 @@ router.post('/FINAL_SAVE', async (req, res) => {
         'GRAPH_TABLE_FN': input.editedItem_FN.GRAPH_TABLE_FN
       };
 
-    
-      out[`FINAL`] = [newob]
 
-      let updatePATTERN = await mongodb.insertMany(PATTERN, PATTERN_01, [out] );
+      out[`INCOMMING`] = [newob]
+
+      let updatePATTERN = await mongodb.insertMany(PATTERN, PATTERN_01, [out]);
       return res.json("ok");
 
-    } else if ('FINAL' in findPATTERN[0]) {
+    } else if ('INCOMMING' in findPATTERN[0]) {
 
 
       PATTERN_create_buff = input
       ans = false
-      for (i = 0; i < findPATTERN[0].FINAL.length; i++) {
-        if (PATTERN_create_buff.editedItem_FN.ITEMs === findPATTERN[0].FINAL[i].ITEMs) {
+      for (i = 0; i < findPATTERN[0].INCOMING.length; i++) {
+        if (PATTERN_create_buff.editedItem_FN.ITEMs === findPATTERN[0].INCOMING[i].ITEMs) {
           ans = true
           break
         }
@@ -365,7 +359,7 @@ router.post('/FINAL_SAVE', async (req, res) => {
         let input2 = findPATTERN;
         let out = input['CPorder'];
         let CP = input2[0].CP;
-        let FINAL = input2[0].FINAL;
+        let INCOMMING = input2[0].INCOMMING;
         let NEXT_I = i + 1
         let n = NEXT_I;
         var newob = {
@@ -393,23 +387,23 @@ router.post('/FINAL_SAVE', async (req, res) => {
           'GRAPH_TABLE_FN': input.editedItem_FN.GRAPH_TABLE_FN
         };
 
-     
 
-        FINAL[n - 1] = newob;
-        out = [{ 'CP': CP }, { $set: { 'FINAL': FINAL } }]
+
+        INCOMMING[n - 1] = newob;
+        out = [{ 'CP': CP }, { $set: { 'INCOMMING': INCOMMING } }]
         console.log(out);
 
-        let updatePATTERN = await mongodb.update(PATTERN, PATTERN_01, { 'CP': CP },{ $set: { 'FINAL': FINAL }});
+        let updatePATTERN = await mongodb.update(PATTERN, PATTERN_01, { 'CP': CP }, { $set: { 'INCOMMING': INCOMMING } });
         return res.json("ok");
 
       } else {
         let input2 = findPATTERN;
         let out = input['CPorder'];
         let CP = input2[0].CP;
-        let FINAL = input2[0].FINAL;
-        let n = FINAL.length;
+        let INCOMMING = input2[0].INCOMMING;
+        let n = INCOMMING.length;
         var newob = {
-          'SEQ': FINAL.length + 1,
+          'SEQ': INCOMMING.length + 1,
           'TYPE': input.MASTERdatalist.TYPE,
           'ITEMs': input.editedItem_FN.ITEMs,
           'RESULTFORMAT': input.MASTERdatalist.RESULTFORMAT,
@@ -432,11 +426,11 @@ router.post('/FINAL_SAVE', async (req, res) => {
           'CONVERSE': input.editedItem_FN.CONVERSE,
           'GRAPH_TABLE_FN': input.editedItem_FN.GRAPH_TABLE_FN
         };
-        FINAL[n] = newob;
-        out = [{ 'CP': CP }, { $set: { 'FINAL': FINAL } }]
+        INCOMMING[n] = newob;
+        out = [{ 'CP': CP }, { $set: { 'INCOMMING': INCOMMING } }]
         console.log(out);
 
-        let updatePATTERN = await mongodb.update(PATTERN, PATTERN_01, { 'CP': CP },{ $set: { 'FINAL': FINAL }});
+        let updatePATTERN = await mongodb.update(PATTERN, PATTERN_01, { 'CP': CP }, { $set: { 'INCOMMING': INCOMMING } });
         return res.json("ok");
 
       }
@@ -446,45 +440,104 @@ router.post('/FINAL_SAVE', async (req, res) => {
       let input2 = findPATTERN;
       let out = input['CPorder'];
       let CP = input2[0].CP;
-      let FINAL = input2[0].FINAL;
-      
-      FINAL=[{
-          'SEQ': 1,
-          'TYPE':input.MASTERdatalist.TYPE,
-          'ITEMs':input.editedItem_FN.ITEMs,
-          'RESULTFORMAT':input.MASTERdatalist.RESULTFORMAT,
-          'GRAPHTYPE':input.MASTERdatalist.GRAPHTYPE,
-          'INTERSECTION':input.MASTERdatalist.INTERSECTION,
-          'DOCUMENT':input.editedItem_FN.DOCUMENT,
-          'SCMARK':input.editedItem_FN.SCMARK,
-          'METHOD':input.editedItem_FN.METHOD,
-          'INSTRUMENTS':input.editedItem_FN.INSTRUMENTS,
-          'SPECIFICATION':input.editedItem_FN.SPECIFICATION,
-          'SPECIFICATIONve':input.editedItem_FN.SPECIFICATIONve,
-          'UNIT':input.editedItem_FN.UNIT,
-          'POINTPCS':input.editedItem_FN.POINTPCS,
-          'POINT':input.editedItem_FN.POINT,
-          'PCS':input.editedItem_FN.PCS,
-          'FREQUENCY':input.editedItem_FN.FREQUENCY,
-          'MODE':input.editedItem_FN.MODE,
-          'REMARK':input.editedItem_FN.REMARK,
-          'LOAD':input.editedItem_FN.LOAD,
-          'CONVERSE':input.editedItem_FN.CONVERSE,
-          'GRAPH_TABLE_FN':input.editedItem_FN.GRAPH_TABLE_FN
+      let INCOMMING = input2[0].INCOMMING;
+
+      INCOMMING = [{
+        'SEQ': 1,
+        'TYPE': input.MASTERdatalist.TYPE,
+        'ITEMs': input.editedItem_FN.ITEMs,
+        'RESULTFORMAT': input.MASTERdatalist.RESULTFORMAT,
+        'GRAPHTYPE': input.MASTERdatalist.GRAPHTYPE,
+        'INTERSECTION': input.MASTERdatalist.INTERSECTION,
+        'DOCUMENT': input.editedItem_FN.DOCUMENT,
+        'SCMARK': input.editedItem_FN.SCMARK,
+        'METHOD': input.editedItem_FN.METHOD,
+        'INSTRUMENTS': input.editedItem_FN.INSTRUMENTS,
+        'SPECIFICATION': input.editedItem_FN.SPECIFICATION,
+        'SPECIFICATIONve': input.editedItem_FN.SPECIFICATIONve,
+        'UNIT': input.editedItem_FN.UNIT,
+        'POINTPCS': input.editedItem_FN.POINTPCS,
+        'POINT': input.editedItem_FN.POINT,
+        'PCS': input.editedItem_FN.PCS,
+        'FREQUENCY': input.editedItem_FN.FREQUENCY,
+        'MODE': input.editedItem_FN.MODE,
+        'REMARK': input.editedItem_FN.REMARK,
+        'LOAD': input.editedItem_FN.LOAD,
+        'CONVERSE': input.editedItem_FN.CONVERSE,
+        'GRAPH_TABLE_FN': input.editedItem_FN.GRAPH_TABLE_FN
       }];
 
-      let updatePATTERN = await mongodb.update(PATTERN, PATTERN_01, { 'CP': CP },{ $set: { 'FINAL': FINAL }});
-        return res.json("ok");
+      let updatePATTERN = await mongodb.update(PATTERN, PATTERN_01, { 'CP': CP }, { $set: { 'INCOMMING': INCOMMING } });
+      return res.json("ok");
     }
 
   }
 
+  return res.json("output");
+});
+
+router.post('/INCOMMING_DELETE', async (req, res) => {
+  //-------------------------------------
+  console.log("--INCOMMING_DELETE--");
+  let input = req.body;
+  let output = {}
+  //-------------------------------------
+  // console.log(input);
+  if (input['CPorder'] != null && input['MASTERdatalist'] != null && input['editedItem_IC'] != null) {
+
+    let findPATTERN = await mongodb.find(PATTERN, PATTERN_01, { "CP": input[`CPorder`]['CP'] });
+    console.log(findPATTERN);
+    if (findPATTERN.length == 0) {
+
+      return res.json("nok");
+
+    } else if ('INCOMMING' in findPATTERN[0]) {
 
 
 
+
+
+      PATTERN_create_buff = input
+
+      for (i = 0; i < findPATTERN[0].INCOMMING.length; i++) {
+        console.log(PATTERN_create_buff.editedItem_FN.ITEMs)
+        if (PATTERN_create_buff.editedItem_FN.ITEMs === findPATTERN[0].INCOMMING[i].ITEMs) {
+
+
+
+          let input2 = findPATTERN;
+          let out = input['CPorder'];
+          let CP = input2[0].CP;
+          let INCOMMING = input2[0].INCOMMING;
+
+
+          INCOMMING.splice(i, 1);
+
+          for (j = 0; j < INCOMMING.length; j++) {
+            INCOMMING[j].SEQ = j + 1;
+          }
+
+          out = [{ 'CP': CP }, { $set: { 'INCOMMING': INCOMMING } }]
+
+          let updatePATTERN = await mongodb.update(PATTERN, PATTERN_01, { 'CP': CP }, { $set: { 'INCOMMING': INCOMMING } });
+          return res.json("ok");
+          break
+        }
+      }
+
+
+    } else if (('INCOMMING' in findPATTERN[0])) {
+
+      return res.json("nok");
+    }
+
+  }
 
   return res.json("output");
 });
 
 
+
 module.exports = router;
+
+
